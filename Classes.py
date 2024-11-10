@@ -1,4 +1,14 @@
-import game
+#notes for next time:
+#add a theta parameter to the direction class
+#implement the turn right and turn left methods using the theta
+#keep track of bullets using the universal game class
+#reconsider the need for bearings
+
+class game:
+    def __init__(self, bullets, ships) -> None:
+        self.bullets = bullets
+        self.ships = ships
+
 class direction:
     def __init__(self, x, y) -> None:
 
@@ -28,11 +38,14 @@ class ship(game):
     def turn_right():
         pass
 
-    def update_bearing():
-        pass
+    def update_bearing(self):
+        self.bear1 = [self.pos[0], self.pos[1] + 1]
+        self.bear2 = [self.pos[0] + 2^(-2), self.pos[1] - 2^(-2)]
+        self.bear3 = [self.pos[0] - 2^(-2), self.pos[1] - 2^(-2)]
 
-    def move():
-        pass
+    def move(self):
+        self.pos[0] += self.direction.x
+        self.pos[1] += self.direction.y
 
     def shoot():
         pass
@@ -40,7 +53,7 @@ class ship(game):
     def detect_collision():
         pass
 
-class bullet:
+class bullet(game):
     def __init__(self, direction, pos) -> None:
         self.xcoord = pos[0]
         self.ycoord = pos[1]
