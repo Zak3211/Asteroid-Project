@@ -4,38 +4,25 @@ class game:
         self.bullets = bullets
         self.ships = ships
 
-class direction:
-    def __init__(self, theta) -> None:
+    def detect_collisions(self):
+        for ship in self.ships:
+            for bullet in self.bullets:
+                if ship.xcoord == bullet.xcoord and ship.ycoord == bullet.ycoord:
+                    ship.isAlive = False
+                    bullet.isAlive = False
+                    self.ships.pop(ship)
+                    self.bullets.pop(bullet)
+                    break
+                
 
-        '''#initiailizing direction vector
-        self.x = x
-        self.y = y
-
-        #normalizing vector
-        mag = (self.x^2 + self.y^2)^(0.5)
-        self.x /= mag
-        self.y /= mag
-        assert (self.x^2 + self.y^2)^(0.5) == 1
-
-        #calculating theta 
-        if self.x > 0:
-            self.theta = math.atan(y/x)
-        elif 0 > x:
-            self.theta = math.atan(y/x) - math.pi
-        else:
-            if y > 0:
-                self.theta = math.pi/2
-            else:
-                self.theta = -math.pi/2
-        '''
-
-class ship(game):
+class ship:
     def __init__(self, theta, xcoord, ycoord) -> None:
         self.theta = theta
         while self.theta >= 360:
             self.theta -= 360
 
         self.pos = [xcoord, ycoord]
+        self.isAlive = True
 
         #define rate of change of angle as omega
         self.omega = 1
@@ -60,19 +47,14 @@ class ship(game):
         self.pos[0] += math.cos(self.theta)
         self.pos[1] += math.sin(self.theta)
 
-    def shoot():
-        pass
-
-    def detect_collision():
-        pass
+    def shoot(self):
+        bullet = bullet(self.theta, self.xcoord, self.ycoord)
 
 class bullet(ship):
     def __init__(self):
-        self.isAlive = True
         while self.isAlive:
             self.move()
 
-#commit notes:
-#removed the direction vector replacing it with theta
-#implemented the turn_right and turn_left methods
-#bullet class now inherits from ship class
+#Push notes:
+#implemented collision detection in game class
+#finalized most game classes
