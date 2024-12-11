@@ -4,6 +4,8 @@ import random
 import json
 import webbrowser
 from PIL import Image, ImageTk
+
+
 #declared here so that they can be static
 #Configuration of window and canvas
 window = tk.Tk()
@@ -116,7 +118,7 @@ class Game:
                 self.asteroids.remove(asteroid)
 
     def detect_collision(self):
-        '''removes colliding entities'''
+
         #create dummy bullet so code runs properly
         if len(self.bullets) == 0:
             self.bullets.append([Bullet(x = -10, y = -10, theta = 3*math.pi/2),2])
@@ -168,7 +170,6 @@ class Game:
                         self.asteroids.remove(ast)
     #randomly generates asteroid on either of the 4 edges
     def generate_asteroid(self):
-        '''decides whether or not to generate a new asteroid and where'''
         #set difficulty based on score
         difficulty = 0.009 + 0.0003*self.score
         if random.randint(0,1000) <= 1000*difficulty:
@@ -176,13 +177,13 @@ class Game:
             self.asteroids.append([temp, temp.draw_asteroid(-1)])
 
 class Ship:
-    '''main ship class'''
     def __init__(self, theta, xcoord, ycoord) -> None:
         self.theta = theta
-        self.is_helper = False
+        
         #use for cheat codes
         self.is_invincible = False
         self.event = None
+        self.is_helper = False
 
         #prevents overflow errors
         self.theta %= 2 * math.pi
@@ -191,35 +192,26 @@ class Ship:
         self.y = ycoord
         self.is_alive = True
 
-        #define rate of change of angle as omega
         self.omega = 0.3
 
-    def turn_left(self, event) -> None:
-        '''turns ship to the left'''
+    def turn_left(self, event = None) -> None:
         self.event = event
         self.theta -= self.omega
 
     def turn_right(self, event) -> None:
-        '''turns ship to the right'''
         self.event = event
         self.theta += self.omega
 
-    def move(self, event) -> None:
-        '''moves ship forward'''
-        self.event = event
+    def move(self, event = None) -> None:
         speed = 5
         self.x += speed * math.cos(self.theta)
         self.y += speed * math.sin(self.theta)
 
-    def shoot(self,  event):
-        '''returns a bullet object'''
-        self.event = event
+    def shoot(self,  event = None):
         return Bullet(self.theta, self.x + 50*math.cos(self.theta),
                        self.y + 50*math.sin(self.theta))
 
-    #function that draws ship based on location and orientation
     def draw_ship(self, player_id):
-        '''draws ship on canvas'''
         s = 0.75
         theta = self.theta
         x = self.x
@@ -232,7 +224,6 @@ class Ship:
         canvas.coords(player_id, new_coords)
 
 class Bullet:
-    '''main bullet class'''
     def __init__(self, theta, x, y) -> None:
         self.theta = theta
         self.x = x
@@ -240,27 +231,22 @@ class Bullet:
         self.is_alive = True
 
     def draw_bullet(self, bullet_id):
-        '''draws bullet'''
+
         r = 3
         new_coords = [self.x - r, self.y - r, self.x + r, self.y + r]
         canvas.coords(bullet_id, new_coords)
     def move(self):
-        '''Moves bullet every turn'''
+       
         s = 10
         self.x += s * math.cos(self.theta)
         self.y += s * math.sin(self.theta)
 
 class Asteroid:
-    '''main asteroid class'''
-
     def __init__(self, size, speed):
         self.size = size
         self.x = random.randint(0, screen_width)
         self.y = random.randint(0, screen_height)
         self.speed = speed
-
-        #variable used to initially plot asteroid
-        self.is_drawn = False
 
         #assign randomly to one of the edges
         temp = random.randint(1,4)
@@ -272,7 +258,7 @@ class Asteroid:
             self.y = 0
         else:
             self.y = screen_height
-        #align theta so asteroid goes to center of screen
+
         if self.y > screen_height/2:
             self.theta = math.atan((screen_height/2 - self.y)/(screen_width/2 - self.x + 0.01))
         else:
@@ -282,15 +268,13 @@ class Asteroid:
             self.theta += math.pi
 
         self.theta %= 2*math.pi
+
     def move(self):
-        '''Moves the asteroid by self.speed'''
-        #speed will eventually vary with score
         speed = self.speed
         self.x += speed * math.cos(self.theta)
         self.y += speed * math.sin(self.theta)
     def draw_asteroid(self, asteroid_id):
-        '''draws asteroid on canvas'''
-        #asteroid_id = -1 if new asteroid is being made
+
         s = 10
         x = self.x
         y = self.y
