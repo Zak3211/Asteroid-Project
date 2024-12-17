@@ -1,3 +1,6 @@
+import math
+import random
+
 class Asteroid:
     def __init__(self, size, speed):
         self.size = size
@@ -20,10 +23,8 @@ class Asteroid:
             self.theta = math.atan((screen_height/2 - self.y)/(screen_width/2 - self.x + 0.01))
         else:
             self.theta = math.atan((screen_width/2 - self.x)/(screen_height/2 - self.y + 0.01))
-
         if self.x >  screen_width/2:
             self.theta += math.pi
-
         self.theta %= 2*math.pi
 
     def move(self):

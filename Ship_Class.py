@@ -1,28 +1,21 @@
+import math
+from Bullet_Class import Bullet
 
 class Ship:
     def __init__(self, theta, xcoord, ycoord) -> None:
         self.theta = theta
-        
-        #use for cheat codes
         self.is_invincible = False
-        self.event = None
         self.is_helper = False
-
-        #prevents overflow errors
         self.theta %= 2 * math.pi
-
         self.x = xcoord
         self.y = ycoord
         self.is_alive = True
-
         self.omega = 0.3
 
     def turn_left(self, event = None) -> None:
-        self.event = event
         self.theta -= self.omega
 
-    def turn_right(self, event) -> None:
-        self.event = event
+    def turn_right(self, event = None) -> None:
         self.theta += self.omega
 
     def move(self, event = None) -> None:

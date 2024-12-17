@@ -1,10 +1,10 @@
+import math
 class Bullet:
     def __init__(self, theta, x, y) -> None:
         self.theta = theta
         self.x = x
         self.y = y
         self.is_alive = True
-
     def draw_bullet(self, bullet_id):
         r = 3
         new_coords = [self.x - r, self.y - r, self.x + r, self.y + r]
