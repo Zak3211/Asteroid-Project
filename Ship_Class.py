@@ -2,7 +2,7 @@ import math
 from Bullet_Class import Bullet
 
 class Ship:
-    def __init__(self, theta, xcoord, ycoord) -> None:
+    def __init__(self, theta, xcoord, ycoord, canvas) -> None:
         self.theta = theta
         self.is_invincible = False
         self.is_helper = False
@@ -11,7 +11,8 @@ class Ship:
         self.y = ycoord
         self.is_alive = True
         self.omega = 0.3
-
+        self.canvas = canvas
+        
     def turn_left(self, event = None) -> None:
         self.theta -= self.omega
 
@@ -37,4 +38,4 @@ class Ship:
                     x + s*25*math.cos(theta + 90), y + s*25*math.sin(theta + 90),
                     x + s*15*math.cos(theta), y + s*15*math.sin(theta),
                     x + s*25*math.cos(theta - 90), y + s*25*math.sin(theta - 90)]
-        canvas.coords(player_id, new_coords)
+        self.canvas.coords(player_id, new_coords)

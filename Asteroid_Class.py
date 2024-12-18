@@ -2,7 +2,11 @@ import math
 import random
 
 class Asteroid:
-    def __init__(self, size, speed):
+    def __init__(self, size, speed, screen_width, screen_height, canvas):
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.canvas = canvas
+
         self.size = size
         self.x = random.randint(0, screen_width)
         self.y = random.randint(0, screen_height)
@@ -13,17 +17,17 @@ class Asteroid:
         if temp == 1:
             self.x = 0
         elif temp == 2:
-            self.x = screen_width
+            self.x = self.screen_width
         elif temp == 3:
             self.y = 0
         else:
-            self.y = screen_height
+            self.y = self.screen_height
 
-        if self.y > screen_height/2:
-            self.theta = math.atan((screen_height/2 - self.y)/(screen_width/2 - self.x + 0.01))
+        if self.y > self.screen_height/2:
+            self.theta = math.atan((self.screen_height/2 - self.y)/(self.screen_width/2 - self.x + 0.01))
         else:
-            self.theta = math.atan((screen_width/2 - self.x)/(screen_height/2 - self.y + 0.01))
-        if self.x >  screen_width/2:
+            self.theta = math.atan((self.screen_width/2 - self.x)/(self.screen_height/2 - self.y + 0.01))
+        if self.x >  self.screen_width/2:
             self.theta += math.pi
         self.theta %= 2*math.pi
 
@@ -31,8 +35,8 @@ class Asteroid:
         speed = self.speed
         self.x += speed * math.cos(self.theta)
         self.y += speed * math.sin(self.theta)
-    def draw_asteroid(self, asteroid_id):
 
+    def draw_asteroid(self, asteroid_id):
         s = 10
         x = self.x
         y = self.y
@@ -46,6 +50,6 @@ class Asteroid:
         else:
             coords = None
         if asteroid_id == -1:
-            return canvas.create_polygon(coords, outline='white')
+            return self.canvas.create_polygon(coords, outline='white')
         else:
-            canvas.coords(asteroid_id, coords)
+            self.canvas.coords(asteroid_id, coords)
