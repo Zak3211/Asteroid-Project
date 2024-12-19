@@ -486,6 +486,7 @@ def main():
                 pause(None)
                 url = 'https://web.cs.manchester.ac.uk/16321-material/new-labs/Coursework/Coursework-02.php'
                 webbrowser.open(url)
+                
     def configure_controls(control):
         wait = tk.StringVar()
         wait.set('.')

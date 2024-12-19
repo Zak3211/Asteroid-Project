@@ -2,7 +2,8 @@ import math
 import random
 
 class Asteroid:
-    def __init__(self, size, speed, screen_width, screen_height, canvas):
+    def __init__(self, size, screen_width, screen_height, canvas = None):
+        self.speed = 2
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.canvas = canvas
@@ -10,7 +11,7 @@ class Asteroid:
         self.size = size
         self.x = random.randint(0, screen_width)
         self.y = random.randint(0, screen_height)
-        self.speed = speed
+
 
         #assign randomly to one of the edges
         temp = random.randint(1,4)
@@ -37,6 +38,9 @@ class Asteroid:
         self.y += speed * math.sin(self.theta)
 
     def draw_asteroid(self, asteroid_id):
+        if not self.canvas:
+            return -1
+        
         s = 10
         x = self.x
         y = self.y
@@ -48,7 +52,8 @@ class Asteroid:
             coords = (x-s*5, y+s*5,x-s*7, y, x-s*3, y-s*2, x+s*3, y-s*2,
                        x+s*4, y-s*4, x+s*6, y-s*1, x+s*5, y+s*5)
         else:
-            coords = None
+            coords = (x-s*2, y+s*1, x-s*4, y-s*1, x, y-s*1, x+s*3, y-s*3, x+s*2, y+s*1)
+
         if asteroid_id == -1:
             return self.canvas.create_polygon(coords, outline='white')
         else:

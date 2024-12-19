@@ -7,13 +7,16 @@ from Asteroid_Class import Asteroid
 class Game:
     def __init__(self, screen_width, screen_height, canvas = None):
         self.canvas = canvas
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+
         self.ships = []
         self.bullets = []
         self.asteroids = []
-        self.is_paused = False
+
+        self.game_over = False
         self.event = None
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+
 
     #Initializes a Player vs Player Game
     def game1(self):
@@ -46,20 +49,6 @@ class Game:
         self.detect_collision()
         self.keep_in_bounds()
         self.generate_asteroid()
-
-        #randomly controls all helper ships
-        for ship in self.ships:
-            if ship[0].is_helper:
-                action = random.randint(1,100)
-                if action %2 == 0:
-                    ship[0].move(None)
-                    bullet_id = self.canvas.create_oval(ship[0].x - 3, ship[0].y - 3,
-                                                    ship[0].x + 3, ship[0].y + 3, fill='red')
-                    self.bullets.append([ship[0].shoot(None),  bullet_id])
-                    if action % 3 == 0:
-                        ship[0].turn_left(None)
-                elif action%3:
-                    ship[0].turn_right(None)
 
         for asteroid in self.asteroids:
             asteroid[0].move()
@@ -100,39 +89,39 @@ class Game:
                 for ast in self.asteroids:
                     c3 = [ast[0].x, ast[0].y]
                     if ((c2[0]-c3[0])**2 + (c2[1] - c3[1])**2)**(0.5) < ast[0].size*20:
-                        if ship[0].is_invincible:
-                            continue
-                        self.canvas.delete(ast[1])
-                        self.canvas.delete(ship[1])
-                        self.ships.remove(ship)
-                        self.asteroids.remove(ast)
-                        continue
+                        self.game_over = True
+                        return 
+                    
 
                     #bullet on asteroid collision
                     distance = ((c1[0]-c3[0])**2 + (c1[1] - c3[1])**2)**(0.5) < ast[0].size*20
                     if distance and b in self.bullets:
                         #creates two smaller asteroids
-                        if ast[0].size != 1:
+                        ship[0].score += 1
+                        if ast[0].size != 1 and False:
                             #create first asteroid
-                            temp1 = Asteroid(ast[0].size - 1, speed = 5)
+                            temp1 = Asteroid(self.screen_width, self.screen_height, ast[0].size - 1, canvas = self.canvas)
                             temp1.theta = -(math.radians(ast[0].theta) + math.pi/2) + math.pi
                             temp1.x = ast[0].x
                             temp1.y = ast[0].y
                             self.asteroids.append([temp1, temp1.draw_asteroid(-1)])
-
+    
+                            
                             #create second asteroid with different angle
-                            temp2 = Asteroid(ast[0].size - 1, speed = 5)
+                            temp2 = Asteroid(self.screen_width, self.screen_height, ast[0].size - 1, canvas = self.canvas)
                             temp2.theta = -(math.radians(ast[0].theta) + math.pi/2) + 1
                             temp2.x = ast[0].x
                             temp2.y = ast[0].y
 
                             self.asteroids.append([temp2, temp2.draw_asteroid(-1)])
-                        self.canvas.delete(ast[1])
-                        self.canvas.delete(b[1])
+                        
+                        if self.canvas:
+                            self.canvas.delete(ast[1])
+                            self.canvas.delete(b[1])
                         self.bullets.remove(b)
                         self.asteroids.remove(ast)
                         
     def generate_asteroid(self):
-        if random.randint(0,1000) <= 100:
-            temp = Asteroid(random.randint(1,3), speed = 5)
+        if random.randint(0,1000) <= 50:
+            temp = Asteroid(random.randint(1,3), self.screen_width, self.screen_height, canvas = self.canvas)
             self.asteroids.append([temp, temp.draw_asteroid(-1)])
