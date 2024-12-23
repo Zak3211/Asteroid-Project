@@ -56,7 +56,7 @@ class ShipNet:
                 return index
         return 3
     
-    def reproduce(self, entropy):
+    def reproduce(self, entropy = 10):
         child = copy.deepcopy(self)
 
         for parameter in [child.weight1, child.weight2, child.bias1, child.bias2]:

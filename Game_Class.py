@@ -122,6 +122,6 @@ class Game:
                         self.asteroids.remove(ast)
                         
     def generate_asteroid(self):
-        if random.randint(0,1000) <= 50:
+        if random.randint(0,1000) <= 75:
             temp = Asteroid(random.randint(1,3), self.screen_width, self.screen_height, canvas = self.canvas)
             self.asteroids.append([temp, temp.draw_asteroid(-1)])
