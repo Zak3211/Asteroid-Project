@@ -5,9 +5,13 @@ import copy
 
 def sigmoid(inputs):
     for i in range(len(inputs)):
-        inputs[i] = (1 + (math.e ** (-inputs[i]))) ** (-1)
+        inputs[i] = 1/(1+np.exp(-inputs[i]))
     return inputs
 
+def step(inputs):
+    for i in range(len(inputs)):
+        inputs[i] = 0 if inputs[i] < 0 else 1
+    return inputs
 
 def softMax(inputs):
     denomenator = sum([input for input in inputs])
@@ -33,11 +37,11 @@ class ShipNet:
 
         inputs = np.dot(self.weight1, inputs) + self.bias1
         inputs = inputs[0]
-        inputs = sigmoid(inputs)
+        inputs = step(inputs)
 
         inputs = np.dot(self.weight2, inputs) + self.bias2
         inputs = inputs[0]
-        inputs = softMax(inputs)
+        #inputs = softMax(inputs)
         
         return inputs
     
@@ -46,17 +50,19 @@ class ShipNet:
         #Return Values {0: Left, 1: Right, 2: Shoot, 3: Move}
 
         inputs = self.forward(inputs)
-        
         rand = random.randint(1,100)
         cumulative_sum = 0
 
+        inputs = list(inputs)
+        return inputs.index(max(inputs))
+    
         for index, prob in enumerate(inputs):
             cumulative_sum += prob
             if rand < cumulative_sum * 100:
                 return index
         return 3
     
-    def reproduce(self, entropy = 10):
+    def reproduce(self, entropy = 5):
         child = copy.deepcopy(self)
 
         for parameter in [child.weight1, child.weight2, child.bias1, child.bias2]:

@@ -10,6 +10,8 @@ class Game:
         self.screen_width = screen_width
         self.screen_height = screen_height
 
+        self.kill_on_edge = True
+
         self.ships = []
         self.bullets = []
         self.asteroids = []
@@ -62,10 +64,20 @@ class Game:
     def keep_in_bounds(self):
         #Removes out of bound entities
         for ship in self.ships:
-            ship[0].x = min(ship[0].x, self.screen_width - 10)
-            ship[0].y = min(ship[0].y, self.screen_height - 10)
-            ship[0].x = max(ship[0].x, 10)
-            ship[0].y = max(ship[0].y, 10)
+            if self.kill_on_edge:
+                if ship[0].x == self.screen_width - 10:
+                    self.game_over = True
+                if ship[0].y == self.screen_height - 10:
+                    self.game_over = True
+                if ship[0].x == 10:
+                    self.game_over = True
+                if ship[0].y ==  10:
+                    self.game_over = True    
+            else:            
+                ship[0].x = min(ship[0].x, self.screen_width - 10)
+                ship[0].y = min(ship[0].y, self.screen_height - 10)
+                ship[0].x = max(ship[0].x, 10)
+                ship[0].y = max(ship[0].y, 10)
 
         #code that removes bullets and asteroids for optimization
         for bullet in self.bullets:
@@ -122,6 +134,6 @@ class Game:
                         self.asteroids.remove(ast)
                         
     def generate_asteroid(self):
-        if random.randint(0,1000) <= 75:
+        if random.randint(0,1000) <= 65:
             temp = Asteroid(random.randint(1,3), self.screen_width, self.screen_height, canvas = self.canvas)
             self.asteroids.append([temp, temp.draw_asteroid(-1)])

@@ -39,6 +39,7 @@ class Ship:
 
     def action(self, inputs):
         res = self.brain.action(inputs)
+
         if res == 0:
             self.turn_left()
         elif res == 1:

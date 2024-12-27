@@ -9,7 +9,6 @@ screen_height = 1000
 screen_width = 1000
 
 root = tk.Tk()
-
 canvas = tk.Canvas(root, width=screen_width, height=screen_height, bg='black')
 canvas.pack()
 
@@ -28,6 +27,7 @@ def getInputs(ship, game):
             x_pos = x
             y_pos = y
 
+    min_distance /= 1000
     return [abs(ship.theta -math.atan2(ship.y-y_pos,ship.x-x_pos)), min_distance]
 
 class Simulation:
@@ -54,18 +54,23 @@ class Simulation:
             def game_loop():
                 self.sim.update()
                 inputs = getInputs(self.ship, self.sim)
+                print(inputs)
                 self.ship.action(inputs)
                 if not self.sim.game_over:
                     canvas.after(10, game_loop)
 
             game_loop()
             root.mainloop()
+            print(self.ship.score)
         else:
             while not self.sim.game_over:
                 self.sim.update()
                 inputs = getInputs(self.ship, self.sim)
                 self.ship.action(inputs)
+                #self.ship.score += 0.01
             self.score = self.ship.score
+            #print(self.ship.score)
+
 
 def load_networks():
     with open(f"networks.pkl", "rb") as file:
@@ -77,14 +82,26 @@ def simulateGeneration(initial = None):
 
     offspring = []
     for brain in initial:
-        for i in range(10):
+        for i in range(5):
             offspring.append(brain.reproduce())
     
+    avg_score = 0
     for i in range(len(offspring)):
-        sim = Simulation(brain = offspring[i])
-        sim.simulate()
-        offspring[i] = [sim.score, offspring[i]]
-    
+
+        total = 0
+        iter = 1
+        for _ in range(iter):
+            sim = Simulation(brain = offspring[i])
+            sim.simulate()
+            total += sim.score
+        total /= iter
+
+        offspring[i] = [total, offspring[i]]
+        avg_score += total
+
+    avg_score /= len(offspring)
+    print(avg_score)
+
     offspring.sort(reverse= True, key = lambda x: x[0])
     offspring = offspring[:10]
     offspring = [child[1] for child in offspring]
@@ -94,8 +111,20 @@ def simulateGeneration(initial = None):
 
 def display_generation():
     offspring = load_networks()
-    sim = Simulation(brain = offspring[0], canvas = canvas)
+    sim = Simulation(brain = offspring[1], canvas = canvas)
     sim.simulate()
 
-for i in range(10):
+display_generation()
+
+while True:
+    break
     simulateGeneration()
+    print("Simulation Completed")
+
+offspring = load_networks()[1]
+
+print(offspring.forward([-2, 1]))
+print(offspring.weight1)
+print(offspring.bias1)
+print(offspring.weight2)
+print(offspring.bias2)
