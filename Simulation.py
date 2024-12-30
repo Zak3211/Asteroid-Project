@@ -54,7 +54,6 @@ class Simulation:
             def game_loop():
                 self.sim.update()
                 inputs = getInputs(self.ship, self.sim)
-                print(inputs)
                 self.ship.action(inputs)
                 if not self.sim.game_over:
                     canvas.after(10, game_loop)
@@ -89,7 +88,7 @@ def simulateGeneration(initial = None):
     for i in range(len(offspring)):
 
         total = 0
-        iter = 1
+        iter = 5
         for _ in range(iter):
             sim = Simulation(brain = offspring[i])
             sim.simulate()
@@ -103,7 +102,7 @@ def simulateGeneration(initial = None):
     print(avg_score)
 
     offspring.sort(reverse= True, key = lambda x: x[0])
-    offspring = offspring[:10]
+    offspring = offspring[:5]
     offspring = [child[1] for child in offspring]
 
     with open("networks.pkl", "wb") as file:
@@ -119,12 +118,4 @@ display_generation()
 while True:
     break
     simulateGeneration()
-    print("Simulation Completed")
-
-offspring = load_networks()[1]
-
-print(offspring.forward([-2, 1]))
-print(offspring.weight1)
-print(offspring.bias1)
-print(offspring.weight2)
-print(offspring.bias2)
+    #print("Simulation Completed")

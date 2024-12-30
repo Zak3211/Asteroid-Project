@@ -3,7 +3,7 @@ import random
 
 class Asteroid:
     def __init__(self, size, screen_width, screen_height, canvas = None):
-        self.speed = 10
+        self.speed = 13
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.canvas = canvas

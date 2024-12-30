@@ -7,7 +7,7 @@ class Ship:
 
         self.theta = theta
         self.theta %= 2 * math.pi
-        self.omega = 0.3
+        self.omega = 0.4
 
         self.x = xcoord
         self.y = ycoord
